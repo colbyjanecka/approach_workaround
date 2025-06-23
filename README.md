@@ -2,7 +2,7 @@
 
 this fixes an issue (feature) with the approach gym management system where a separate computer has to be set up for the qr code scanner. when the scanner acts as a keyboard in a textbox it cannot detect and scan someone in. unfortunately this solution is pretty invasive - you will be tabbed into another window (safari) every time a user tries to check in with the scanner. made for mosaic boulders
 
-install: download [approach_workaround](approach_workaround). open (right click then select open) - then grant necessary permissions.
+install: download the zip of the repo (or clone). run [approach_workaround](approach_workaround) (requires privacy bypass)- then grant necessary permissions.
 
 in order to work:
 
