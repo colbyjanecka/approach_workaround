@@ -1,9 +1,11 @@
 import serial
 import serial.tools.list_ports
 import subprocess
+import shlex
 import time
 
 alt_browser = "Safari"
+url = "https://benchmark.kiosk.approach.app/barcode-checkin"
 
 def find_scanner_port():
     """Auto-detect USB serial scanner port."""
@@ -53,8 +55,14 @@ def handle_scan(scan_text):
 def main():
     port = find_scanner_port()
     if not port:
-        print("please plug in your scanner in USB Serial mode.")
+        print("please plug in your scanner in USB Serial mode, and relaunch.")
         return
+
+    print("Scanner Detected.  Opening Approach Checkin Page")
+    cmd = f"open -a Safari {url}"
+    cmd_parts = shlex.split(cmd)
+
+    subprocess.run(cmd_parts)
 
     try:
         with serial.Serial(port, baudrate=9600, timeout=1) as ser:
