@@ -3,6 +3,7 @@ import serial.tools.list_ports
 import subprocess
 import shlex
 import time
+import os
 
 alt_browser = "Safari"
 url = "https://benchmark.kiosk.approach.app/barcode-checkin"
@@ -48,17 +49,38 @@ def handle_scan(scan_text):
     switch_to_app(alt_browser)
     time.sleep(0.5)
     send_string_applescript(scan_text)
+    notify('Member Checked In', title='Successful Scan')
     time.sleep(0.2)
     print(f"returning to '{previous_app}'...")
     switch_to_app(previous_app)
 
+def notify(message,title=None,subtitle=None,soundname=None):
+        """
+                Display an OSX notification with message title an subtitle
+                sounds are located in /System/Library/Sounds or ~/Library/Sounds
+        """
+        titlePart = ''
+        if(not title is None):
+                titlePart = 'with title "{0}"'.format(title)
+        subtitlePart = ''
+        if(not subtitle is None):
+                subtitlePart = 'subtitle "{0}"'.format(subtitle)
+        soundnamePart = ''
+        if(not soundname is None):
+                soundnamePart = 'sound name "{0}"'.format(soundname)
+
+        appleScriptNotification = 'display notification "{0}" {1} {2} {3}'.format(message,titlePart,subtitlePart,soundnamePart)
+        os.system("osascript -e '{0}'".format(appleScriptNotification))
+
 def main():
     port = find_scanner_port()
     if not port:
-        print("please plug in your scanner in USB Serial mode, and relaunch.")
+        print("please plug in scanner in USB Serial mode, and relaunch.")
+        notify('Please plug in scanner and relaunch', title='Scanner Not Connected')
         return
 
     print("Scanner Detected.  Opening Approach Checkin Page")
+    notify('Launching Checkin Page', title='Scanner Connected')
     cmd = f"open -a Safari {url}"
     cmd_parts = shlex.split(cmd)
 
@@ -74,6 +96,7 @@ def main():
                     handle_scan(line)
     except serial.SerialException as e:
         print(f"serial error: {e}")
+        notify('Please plug in scanner and relaunch', title='Scanner Unplugged')
 
 if __name__ == "__main__":
     main()
