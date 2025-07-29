@@ -4,6 +4,8 @@ import subprocess
 import shlex
 import time
 import os
+import pgrep
+import psutil
 
 alt_browser = "Safari"
 url = "https://benchmark.kiosk.approach.app/barcode-checkin"
@@ -41,7 +43,11 @@ def send_string_applescript(text):
         key code 36 -- press Enter
     end tell
     '''
-    subprocess.run(["osascript", "-e", script])
+    try:
+        subprocess.run(["osascript", "-e", script])
+    except Exception as e:
+        # Code to execute for any other type of exception
+        print(f"An unexpected error occurred: {e}")
 
 def handle_scan(scan_text):
     previous_app = get_front_app_name()
@@ -73,6 +79,15 @@ def notify(message,title=None,subtitle=None,soundname=None):
         os.system("osascript -e '{0}'".format(appleScriptNotification))
 
 def main():
+    processName="Scanner"
+    print(pgrep.pgrep("Scanner"))
+    for pid in pgrep.pgrep("Scanner"):
+        proc = psutil.Process(pid)
+        proc.terminate()
+        print("SCANNER RUNNING")
+    else:
+        print("SCANNER NOT RUNNING")
+
     port = find_scanner_port()
     if not port:
         print("please plug in scanner in USB Serial mode, and relaunch.")
