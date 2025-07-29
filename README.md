@@ -1,4 +1,6 @@
-# Approach Workaround
+# Approach Workaround - Benchmark Climbing
+
+*custom implementation that was originally designed by the wonderful @max-calcoen*
 
 this fixes an issue (feature) with the approach gym management system where a separate computer has to be set up for the qr code scanner. when the scanner acts as a keyboard in a textbox it cannot detect and scan someone in. unfortunately this solution is pretty invasive - you will be tabbed into another window (safari) every time a user tries to check in with the scanner. made for mosaic boulders
 
